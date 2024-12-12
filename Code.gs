@@ -20,8 +20,8 @@ function onFormSubmit(e) {
 
   //Access the values
   var name = submittedData[0][1];
-  var vocalFPM1 = submittedData[0][3];
-  var vocalSPM1 = submittedData[0][4];
+  var vocalFP = submittedData[0][3];
+  var vocalSP = submittedData[0][4];
   var pianoM1 = submittedData[0][6];
   var guitarM1 = submittedData[0][7];
   var bassM1 = submittedData[0][8];
@@ -33,38 +33,31 @@ function onFormSubmit(e) {
 
   
   // Call the function for each instrument
-  appendMusician(guitarM1, 4, 1); // Guitar Month 1
-  appendMusician(bassM1, 5, 1); // Bass Month 1
-  appendMusician(pianoM1, 6, 1); // Piano Month 1
-  appendMusician(drumM1, 7, 1); // Drum Month 1
-  appendMusician(vocalFPM1, 2, 1);
-  appendMusician(vocalSPM1, 3, 1);
+  appendMusician(guitarM1, 4); // Guitar Month 1
+  appendMusician(bassM1, 5); // Bass Month 1
+  appendMusician(pianoM1, 6); // Piano Month 1
+  appendMusician(drumM1, 7); // Drum Month 1
   
   // Month 2
-  appendMusician(guitarM2, 4, 2);
-  appendMusician(bassM2, 5, 2);
-  appendMusician(pianoM2, 6, 2);
-  appendMusician(drumM2, 7, 2);
-
+  appendMusician(guitarM2, 4);
+  appendMusician(bassM2, 5);
+  appendMusician(pianoM2, 6);
+  appendMusician(drumM2, 7);
+  
+  // Vocals
+  appendMusician(vocalFP, 2);
+  appendMusician(vocalSP, 3);
 
   function appendMusician(instrument, row, month){
     var instrumentArray = instrument.split(","); // Split instrument into individual dates for easier sorting
     for (let i = 0; i < instrumentArray.length; i++) {
       for (let j = 0; j < dateArray[0].length; j++) { 
         if (instrumentArray[i].trim() === dateArray[0][j].toString()){ // Trim to remove spaces (if there are any) for a less sketch comparison
-          if (month == 1){ 
             var targetColumn = j + 2; // Get correct column to put names in
             let currentCellValue = availabilitySheet.getRange(row, targetColumn).getValue(); // Get current value in cell
             if (currentCellValue === "" || !currentCellValue.includes(name)) { // Append name if it's not already in the cell, if there is already a name then add on
               availabilitySheet.getRange(row, targetColumn).setValue(`${currentCellValue}${currentCellValue ? ", " : ""}${name}`); 
             }
-          } else if (month == 2){
-            var targetColumn = j + 2; // Get correct column to put names in
-            let currentCellValue = availabilitySheet.getRange(row, targetColumn).getValue(); // Get current value in cell
-            if (currentCellValue === "" || !currentCellValue.includes(name)) { // Append name if it's not already in the cell, if there is already a name then add on
-              availabilitySheet.getRange(row, targetColumn).setValue(`${currentCellValue}${currentCellValue ? ", " : ""}${name}`); 
-            }
-          }
           break; 
         }
       }
