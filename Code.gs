@@ -11,7 +11,7 @@ function onFormSubmit(e) {
   //This allows us to access the spreadsheet, specifically the 'Test' tab
   const availabilitySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Test');
 
-  var submittedData = sheet.getRange('A2:N2').getValues();  // Get values from A3 to F3 (returns a 2D array)
+  var submittedData = sheet.getRange('A3:N3').getValues();  // Get values from A3 to F3 (returns a 2D array)
   Logger.log(submittedData);
 
   // Get the dates of every Sunday from the spreadsheet
@@ -24,100 +24,25 @@ function onFormSubmit(e) {
   var guitar = submittedData[0][7];
   var bass = submittedData[0][8];
   var drum = submittedData[0][9];
-  // Appending all Instrument into correct dates (Month of Jan)
-  var pianoArray = [{}];
-  pianoArray = piano.split(","); //Splits the piano of a person into individual dates
-  for (let i = 0; i < pianoArray.length; i++) {
-    for (let j = 0; j < dateArray[0].length; j++) { 
-      if (pianoArray[i].trim() === dateArray[0][j].toString()){ // Trim function removes the spaces so that comparing is less sketchy
-        // Correct Row Number that corresponds to Pianos
-        var nameRow = 6; 
-
-        // Calculate the target column index (shifted by one to the right)
-        var targetColumn = j + 2; 
-
-        // Get the current value in the cell
-        let currentCellValue = availabilitySheet.getRange(nameRow, targetColumn).getValue(); 
-
-        // Append the name if it's not already in the cell
-        if (currentCellValue === "" || !currentCellValue.includes(name)) { 
-          availabilitySheet.getRange(nameRow, targetColumn).setValue(`${currentCellValue}${currentCellValue ? ", " : ""}${name}`); 
-        }
-        // Break inner loop after finding a match
-        break; 
-      }
-    }
-  }
-
   
-  var guitarArray = [{}];
-  guitarArray = guitar.split(","); //Splits the guitar of a person into individual dates
-  for (let i = 0; i < guitarArray.length; i++) {
-    for (let j = 0; j < dateArray[0].length; j++) { 
-      if (guitarArray[i].trim() === dateArray[0][j].toString()){ // Trim function removes the spaces so that comparing is less sketchy
-        // Correct Row Number that corresponds to Guitars
-        var nameRow = 4; 
-
-        // Calculate the target column index (shifted by one to the right)
-        var targetColumn = j + 2; 
-
-        // Get the current value in the cell
-        let currentCellValue = availabilitySheet.getRange(nameRow, targetColumn).getValue(); 
-
-        // Append the name if it's not already in the cell
-        if (currentCellValue === "" || !currentCellValue.includes(name)) { 
-          availabilitySheet.getRange(nameRow, targetColumn).setValue(`${currentCellValue}${currentCellValue ? ", " : ""}${name}`); 
+  function appendMusician(instrument, row){
+    var instrumentArray = instrument.split(","); // Split instrument into individual dates for easier sorting
+    for (let i = 0; i < instrumentArray.length; i++) {
+      for (let j = 0; j < dateArray[0].length; j++) { 
+        if (instrumentArray[i].trim() === dateArray[0][j].toString()){ // Trim to remove spaces (if there are any) for a less sketch comparison 
+          var targetColumn = j + 2; // Get correct column to put names in
+          let currentCellValue = availabilitySheet.getRange(row, targetColumn).getValue(); // Get current value in cell
+          if (currentCellValue === "" || !currentCellValue.includes(name)) { // Append name if it's not already in the cell, if there is already a name then add on
+            availabilitySheet.getRange(row, targetColumn).setValue(`${currentCellValue}${currentCellValue ? ", " : ""}${name}`); 
+          }
+          break; 
         }
-        // Break inner loop after finding a match
-        break; 
       }
     }
   }
-  var bassArray = [{}];
-  bassArray = bass.split(","); //Splits the piano of a person into individual dates
-  for (let i = 0; i < bassArray.length; i++) {
-    for (let j = 0; j < dateArray[0].length; j++) { 
-      if (bassArray[i].trim() === dateArray[0][j].toString()){ // Trim function removes the spaces so that comparing is less sketchy
-        // Correct Row Number that corresponds to Pianos
-        var nameRow = 5; 
-
-        // Calculate the target column index (shifted by one to the right)
-        var targetColumn = j + 2; 
-
-        // Get the current value in the cell
-        let currentCellValue = availabilitySheet.getRange(nameRow, targetColumn).getValue(); 
-
-        // Append the name if it's not already in the cell
-        if (currentCellValue === "" || !currentCellValue.includes(name)) { 
-          availabilitySheet.getRange(nameRow, targetColumn).setValue(`${currentCellValue}${currentCellValue ? ", " : ""}${name}`); 
-        }
-        // Break inner loop after finding a match
-        break; 
-      }
-    }
-  }
-  var drumArray = [{}];
-  drumArray = drum.split(","); //Splits the piano of a person into individual dates
-  for (let i = 0; i < drumArray.length; i++) {
-    for (let j = 0; j < dateArray[0].length; j++) { 
-      if (drumArray[i].trim() === dateArray[0][j].toString()){ // Trim function removes the spaces so that comparing is less sketchy
-        // Correct Row Number that corresponds to Pianos
-        var nameRow = 7; 
-
-        // Calculate the target column index (shifted by one to the right)
-        var targetColumn = j + 2; 
-
-        // Get the current value in the cell
-        let currentCellValue = availabilitySheet.getRange(nameRow, targetColumn).getValue(); 
-
-        // Append the name if it's not already in the cell
-        if (currentCellValue === "" || !currentCellValue.includes(name)) { 
-          availabilitySheet.getRange(nameRow, targetColumn).setValue(`${currentCellValue}${currentCellValue ? ", " : ""}${name}`); 
-        }
-        // Break inner loop after finding a match
-        break; 
-      }
-    }
-  }
-  
+  // Call the function for each instrument
+  appendMusician(guitar, 4); // Guitar
+  appendMusician(bass, 5); // Bass
+  appendMusician(piano, 6); // Piano
+  appendMusician(drum, 7); // Drum   
 }
